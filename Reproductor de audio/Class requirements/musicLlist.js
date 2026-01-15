@@ -1,9 +1,9 @@
-export class audioList {
+export class musicList {
     // constructor
-    constructor(title, labels, audioList) {
+    constructor(title, labels, musicList) {
         this.setTitle(title);
         this.setLabels(labels);
-        this.setAudioList(audioList);
+        this.setMsicList(musicList);
     }
 
     // setters
@@ -13,8 +13,8 @@ export class audioList {
     setLabels(labels) {
         this.labels = labels;
     }
-    setAudioList(audioList) {
-        this.audioList = audioList;
+    setMusicList(musicList) {
+        this.musicList = musicList;
     }
 
     // getters
@@ -24,7 +24,7 @@ export class audioList {
     getLabels() {
         return this.labels;
     }
-    getAudioList() {
-        return this.audioList;
+    getMusicList() {
+        return this.musicList;
     }
 }

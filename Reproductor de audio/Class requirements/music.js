@@ -1,4 +1,4 @@
-export class Audio {
+export class Music {
     constructor(title = '', fileName = '', mediaType = '', labels = []) {
         this.title = '';
         this.fileName = '';
@@ -54,8 +54,8 @@ export class Audio {
         return '';
     }
 
-    // Generate HTML audio (uses method getters)
-    makeHTMLAudio() {
+    // Generate HTML music (uses method getters)
+    makeHTMLMusic() {
         const src = this.getFileName() || '';
         const type = this.getMediaType() || this.classifyFileExtension(src);
         return `<audio controls><source src="${src}" type="${type}"></audio>`;
