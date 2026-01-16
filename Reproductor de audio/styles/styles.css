@@ -1,0 +1,7 @@
+        .hover-info {
+            display: none;
+        }
+
+        .title:hover+.hover-info {
+            display: block;
+        }

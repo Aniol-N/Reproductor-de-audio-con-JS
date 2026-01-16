@@ -3,7 +3,7 @@ export class musicList {
     constructor(title, labels, musicList) {
         this.setTitle(title);
         this.setLabels(labels);
-        this.setMsicList(musicList);
+        this.setMusicList(musicList);
     }
 
     // setters
