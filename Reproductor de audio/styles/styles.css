@@ -1,7 +1,41 @@
-        .hover-info {
-            display: none;
-        }
+.hover-info {
+    display: none;
+}
 
-        .title:hover+.hover-info {
-            display: block;
-        }
+.song-item:hover .hover-info {
+    display: block;
+}
+
+.song-item {
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin: 5px 0;
+    position: relative;
+}
+
+.song-item.selected {
+    background-color: lightblue;
+}
+
+.song-item-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+#playContainer {
+    margin: 20px;
+    text-align: center;
+}
+
+.song-item .add-button {
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.song-item:hover .add-button {
+    display: block;
+}

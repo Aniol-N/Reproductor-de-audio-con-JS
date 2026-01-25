@@ -56,8 +56,7 @@ export class Music {
 
     // Generate HTML music (uses method getters)
     makeHTMLMusic() {
-        const src = this.getFileName() || '';
-        const type = this.getMediaType() || this.classifyFileExtension(src);
-        return `<audio controls><source src="${src}" type="${type}"></audio>`;
+        const fileName = this.getFileName() || '';
+        return `<span class="song-title">${this.getTitle()} (${fileName})</span>`;
     }
 }
