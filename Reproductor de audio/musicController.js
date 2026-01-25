@@ -21,10 +21,9 @@ export class MusicController {
     }
 
     selectSong(song) {
-        this.index = this.playlist.indexOf(song);
-        this.audio.src = song.path;
+        this.selectedSong = song;
+        this.audio.src = song.getFileName();
         this.audio.play();
-
         this.renderPlaylist();
     }
 
@@ -75,21 +74,27 @@ export class MusicController {
             this.musicListElement.appendChild(li);
         });
     }
+
     setupControls() {
         const btnPlay = document.getElementById('btnPlay');
-        if (!btnPlay) return;
+        const volume = document.getElementById('volumeControl');
 
+        if (!btnPlay) return;
         btnPlay.onclick = () => {
+            if (!this.selectedSong) return;
             if (this.audio.paused) {
                 this.audio.play();
-                '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play-icon lucide-play"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>';
+                btnPlay.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pause-icon lucide-pause"><path d="M6 4h4v16H6z"/><path d="M14 4h4v16h-4z"/></svg>`;
             } else {
                 this.audio.pause();
-                '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play-icon lucide-play"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>';
+                btnPlay.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play-icon lucide-play"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>`;
             }
         };
+        
+        volume.oninput = () => {
+            this.audio.volume = volume.value / 100;
+        };
     }
-
 
     next() {
         if (this.playlist.length === 0) return;
