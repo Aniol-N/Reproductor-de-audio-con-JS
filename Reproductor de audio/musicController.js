@@ -122,5 +122,3 @@ const myFiles = [
 const controller = new MusicController(myFiles);
 
 window.musicController = controller;
-
-controller.processSongs(myFiles);
