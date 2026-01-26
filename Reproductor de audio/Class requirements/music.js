@@ -17,9 +17,10 @@ export class Music {
     }
 
     setFileName(fileName) {
-        if (this.isFileNameValid(fileName)) {
-            this.fileName = fileName;
-            this.mediaType = this.classifyFileExtension(fileName);
+        const soloName = fileName.split('/').pop();
+        if (this.isFileNameValid(soloName)) {
+            this.fileName = soloName;
+            this.mediaType = this.classifyFileExtension(soloName);
         } else {
             throw new Error('El nombre del archivo debe tener al menos 1 carácter y terminar con una extensión válida.');
         }
@@ -56,7 +57,10 @@ export class Music {
 
     // Generate HTML music (uses method getters)
     makeHTMLMusic() {
-        const fileName = this.getFileName() || '';
-        return `<span class="song-title">${this.getTitle()} (${fileName})</span>`;
+        return `
+        <span class="song-title">
+            ${this.getTitle()}
+        </span>
+        `;
     }
 }
