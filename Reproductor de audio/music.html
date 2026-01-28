@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>JS Audio Player</title>
     <script src="./main.js" type="module" defer></script>
     <style>
-        .song-item { border-bottom: 1px solid #ccc; padding: 5px; }
-        #playlists-container button { margin: 5px; cursor: pointer; }
+        .song-item {
+            border-bottom: 1px solid #ccc;
+            padding: 5px;
+        }
+
+        #playlists-container button {
+            margin: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
+
 <body>
     <h1>Audio Player</h1>
-
-    <!-- Genre Filter -->
     <section>
         <label>Filter by Genre:</label>
         <select id="labelFilter" onchange="window.filterByLabel(this.value)">
@@ -22,42 +29,31 @@
             <option value="classical">Classical</option>
         </select>
     </section>
-
-    <!-- My Playlists Section (Point 2.f) -->
     <section>
         <h2>My Playlists</h2>
         <button onclick="window.addNewList()">➕ Create New List</button>
         <div id="playlists-container">
-            <!-- Playlists buttons will appear here -->
         </div>
     </section>
-
     <hr>
-
-    <!-- Songs List -->
     <section>
         <h2>Songs View</h2>
         <div id="songs-container"></div>
     </section>
-
     <hr>
-
-    <!-- Audio Console -->
     <section id="player">
         <h3 id="playback-display">No song selected</h3>
         <audio id="main-audio"></audio>
-        
         <div class="controls">
             <button onclick="window.controlAudio('play')">Play</button>
             <button onclick="window.controlAudio('pause')">Pause</button>
             <button onclick="window.controlAudio('stop')">Stop</button>
         </div>
-
         <div class="volume">
             <label>Volume:</label>
-            <input type="range" min="0" max="1" step="0.1" value="0.5" 
-                   oninput="window.changeVolume(this.value)">
+            <input type="range" min="0" max="1" step="0.1" value="0.5" oninput="window.changeVolume(this.value)">
         </div>
     </section>
 </body>
+
 </html>

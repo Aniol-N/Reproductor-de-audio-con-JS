@@ -1,6 +1,5 @@
 export class Music {
     constructor(title, fileName, labels = []) {
-        // Assigning to triggers the setters
         this.title = title;
         this.fileName = fileName;
         this.labels = labels;
