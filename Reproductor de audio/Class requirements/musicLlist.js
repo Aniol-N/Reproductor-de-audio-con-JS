@@ -1,9 +1,9 @@
 export class musicList {
     // constructor
-    constructor(title, labels, musicList) {
+    constructor(title, labels = [], songs = []) {
         this.setTitle(title);
         this.setLabels(labels);
-        this.setMusicList(musicList);
+        this.setMusicList(songs);
     }
 
     // setters
@@ -27,4 +27,15 @@ export class musicList {
     getMusicList() {
         return this.musicList;
     }
+
+    // add and remove music form list
+    addSong(song){
+        this.songs.push(song);
+    }
+
+    removeSong(song){
+        this.songs = this.songs.filter(s => s !== song);
+    }
+
+    
 }

@@ -7,14 +7,13 @@
     <title>Audio player</title>
 
     <link rel="stylesheet" href="./styles/styles.css">
-    <script src="./Class requirements/music.js" type="module" defer></script>
-    <script src="./Class requirements/musicLlist.js" type="module" defer></script>
     <script src="./musicController.js" type="module" defer></script>
-    
+
     <script>
-        const cancion1 = new Music("Blinding Lights", "Blinding Lights.mp3", "", ["pop"]);
-        const cancion2 = new Music("Despacito", "Despacito.mp3", "", ["latin"]);
-        const listaDisponibles = new musicList("disponibles", ["tots"], [cancion1, cancion2]);
+        const song1 = new Music("Blinding Lights", "Blinding Lights.mp3", "", ["pop"]);
+        const song2 = new Music("Despacito", "Despacito.mp3", "", ["latin"]);
+        const song3 = new Music("White Christmas", "White Christmas.mp3", "", ["classical"]);
+        const listaDisponibles = new musicList("disponibles", ["tots"], [song1, song2, song3]);
         const controller = new MusicController(listaDisponibles);
     </script>
 

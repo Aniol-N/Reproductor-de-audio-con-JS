@@ -1,28 +1,25 @@
 import { Music } from "./Class requirements/music.js";
+import { musicList } from "./Class requirements/musicLlist.js";
 
 export class MusicController {
-    constructor(songs = []) {
-        this.playlist = [];
-        this.musicListElement = document.getElementById('musicList');
+    constructor() {
+        this.lists = [];
+        this.currentList = null;
         this.selectedSong = null;
-        this.index = 0;
 
         this.audio = new Audio();
-        this.songs = songs;
-
         this.audio.onended = () => this.next();
-        this.audio.onerror = () => console.error("Error al cargar audio");
+        this.musicListElement = document.getElementById('musicList');
 
-        if (this.songs.length > 0) {
-            this.processSongs(this.songs);
-
-            this.setupControls();
-        }
+        this.initDisponibles();
+        this.setupControls();
+        this.handleRouting();
     }
 
     selectSong(song) {
         this.selectedSong = song;
-        this.index = this.playlist.indexOf(song);
+        const songs = this.currentList.getMusicList();
+        this.index = songs.indexOf(song);
 
         const carpeta = './music_src/';
         this.audio.src = carpeta + song.getFileName();
@@ -50,15 +47,17 @@ export class MusicController {
     }
 
     renderPlaylist() {
-        if (!this.musicListElement) return;
+        if (!this.musicListElement || !this.currentList) return;
         this.musicListElement.innerHTML = '';
 
-        this.playlist.forEach(song => {
+        const songs = this.currentList.getMusicList();
+        songs.forEach(song => {
             const li = document.createElement('li');
             li.classList.add('song-item');
             if (this.isSelected(song)) {
                 li.classList.add('selected');
             }
+
             li.innerHTML = `
                 <div class="song-item-content">
                     ${song.makeHTMLMusic()}
@@ -74,6 +73,7 @@ export class MusicController {
                     </button>
                 </div>
             `;
+
             li.onclick = () => this.selectSong(song);
             this.musicListElement.appendChild(li);
         });
@@ -93,12 +93,28 @@ export class MusicController {
                 btnPlay.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play-icon lucide-play"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>`;
             }
         };
+        // Control de Volumen
         const volume = document.getElementById('volumeControl');
         if (volume) {
-            volume.oninput = () => {
-                this.audio.volume = volume.value / 100;
+            volume.oninput = () => { this.audio.volume = volume.value / 100; };
+        }
+
+        // Botón Crear Lista
+        const btnCreateList = document.getElementById('addToMusicList');
+        if (btnCreateList) {
+            btnCreateList.onclick = () => {
+                const name = prompt("Nombre de la nueva lista:");
+                if (name) {
+                    this.createNewList(name);
+                    window.location.hash = `list/${encodeURIComponent(name)}`;
+                }
             };
         }
+
+        // Escuchar cambios en la URL
+        window.addEventListener('hashchange', () => {
+            this.handleRouting();
+        });
     }
 
     next() {
@@ -107,18 +123,49 @@ export class MusicController {
         this.selectSong(this.playlist[this.index]);
     }
 
-    isSelected(song) {
-        return this.selectedSong === song;
+    initDisponibles() {
+        const s1 = new Music("Blinding Lights", "Blinding Lights.mp3", "", ["pop"]);
+        const s2 = new Music("Despacito", "Despacito.mp3", "", ["latin"]);
+        const s3 = new Music("White Christmas", "White Christmas.mp3", "", ["classical"]);
+
+        const disponibles = new musicList("disponibles", ["tots"], [s1, s2, s3]);
+        this.lists.push(disponibles);
+        this.currentList = disponibles;
+
+        this.renderPlaylist();
+    }
+
+    handleRouting() {
+        const hash = window.location.hash; // coge el "#list/nombre"
+
+        if (hash.startsWith('#list/')) {
+            const listName = decodeURIComponent(hash.replace('#list/', ''));
+
+            // Buscar la lista en nuestro array
+            const found = this.lists.find(l => l.getTitle() === listName);
+
+            if (found) {
+                this.currentList = found;
+                this.renderPlaylist();
+                // Opcional: actualizar el título en el HTML
+                document.querySelector('h2').innerText = `List: ${listName}`;
+            }
+        }
+    }
+    
+    createNewList(name) {
+        const newList = new musicList(name, ["usuario"], []);
+        this.lists.push(newList);
+    }
+
+    addSongToList(song, list) {
+        const lista = this.lists.find(l => l.getTitle() === list.getTitle());
+        if (lista) {
+            lista.addSong(song);
+        }
     }
 }
 
 // ejecucion
-const myFiles = [
-    { file: "Blinding Lights.mp3", labels: ["pop", "electronic"] },
-    { file: "Despacito.mp3", labels: ["reggae", "latin"] },
-    { file: "White Christmas.mp3", labels: ["classical", "holiday"] },
-];
-
-const controller = new MusicController(myFiles);
-
+const controller = new MusicController();
 window.musicController = controller;
