@@ -26,9 +26,10 @@ function renderSongs(musicList) {
         songDiv.className = 'song-item';
         songDiv.innerHTML = `
             <span><strong>${song.title}</strong></span>
-            <button onclick="window.playSong('${song.fileName}', '${song.title}')">Play ▶️</button>
+            <button onclick="window.playSong('${song.fileName}', '${song.title}', '${song.mediaType}', '${song.labels}')">Play ▶️</button>
             <button onclick="window.addSongToAnotherList('${song.title}')">➕ Add to List</button>
             <button onclick="window.deleteSongFromSelectedList('${song.title}')">🗑️ Delete from List</button>
+            <button onclick="window.changeLabels('${song.title}')">🏷️ Change labels</button>
         `;
         songsContainer.appendChild(songDiv);
     });
@@ -44,10 +45,15 @@ function renderPlaylists() {
     });
 }
 
-window.playSong = function (fileName, title) {
+window.playSong = function (fileName, title, mediaType, labels) {
+    mediaType
     audioPlayer.src = `./music_src/${fileName}`;
     audioPlayer.play();
-    infoDisplay.innerText = `Now playing: ${title}`;
+    infoDisplay.innerText = `
+        Now playing: ${title}   
+        File extension: ${mediaType}
+        Labels: ${labels}
+        `;
 };
 
 window.controlAudio = function (action) {
@@ -121,5 +127,13 @@ window.deleteSongFromSelectedList = function (songTitle) {
     }
 };
 
+window.changeLabels = function (songTitle) {
+    const selectedSong = availableSongs.list.find(s => s.title === songTitle);
+    if (!selectedSong) {
+        alert("Song not found!");
+        return;
+    }
+    const actionChoice = prompt("Select \n 1.Add new labels \n 2.Delete labels");
+}
 renderSongs(availableSongs);
 renderPlaylists();
