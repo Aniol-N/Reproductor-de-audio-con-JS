@@ -3,7 +3,7 @@ import { MusicList } from './musicList.js';
 
 const availableSongs = new MusicList('Available', ['all']);
 
-const userPlaylists = []; 
+const userPlaylists = [];
 
 const song1 = new Music("Blinding Lights", "Blinding Lights.mp3", ["pop"]);
 const song2 = new Music("Despacito", "Despacito.mp3", ["latin", "pop"]);
@@ -28,6 +28,7 @@ function renderSongs(musicList) {
             <span><strong>${song.title}</strong></span>
             <button onclick="window.playSong('${song.fileName}', '${song.title}')">Play ▶️</button>
             <button onclick="window.addSongToAnotherList('${song.title}')">➕ Add to List</button>
+            <button onclick="window.deleteSongFromSelectedList('${song.title}')">🗑️ Delete from List</button>
         `;
         songsContainer.appendChild(songDiv);
     });
@@ -89,7 +90,7 @@ window.addSongToAnotherList = function (songTitle) {
     }
 
     const songToAdd = availableSongs.list.find(s => s.title === songTitle);
-    
+
     const listNames = userPlaylists.map((l, index) => `${index}: ${l.title}`).join("\n");
     const choice = prompt(`Select list index to add "${songTitle}":\n${listNames}`);
 
@@ -97,6 +98,26 @@ window.addSongToAnotherList = function (songTitle) {
         userPlaylists[choice].addMusic(songToAdd);
         renderPlaylists();
         alert("Song added!");
+    }
+};
+
+window.deleteSongFromSelectedList = function (songTitle) {
+    if (userPlaylists.length === 0) {
+        alert("No music available to delete!");
+        return;
+    }
+
+    const songToRemove = availableSongs.list.find(s => s.title === songTitle);
+    const listNames = userPlaylists.map((l, index) => `${index}: ${l.title}`).join("\n");
+    const choice = prompt(`Select the PLAYLIST index to remove "${songTitle}" from:\n${listNames}`);
+    const selectedList = userPlaylists[choice];
+    if (selectedList) {
+        selectedList.deleteMusic(songToRemove);
+        renderPlaylists();
+        renderSongs(selectedList);
+        alert(`Song "${songTitle}" removed from ${selectedList.title}`);
+    } else {
+        alert("Invalid selection");
     }
 };
 
