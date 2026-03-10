@@ -9,6 +9,33 @@
         .song-item {
             border-bottom: 1px solid #ccc;
             padding: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .song-checkbox {
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .bulk-actions {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .bulk-actions button {
+            cursor: pointer;
+        }
+
+        #selection-count {
+            font-weight: bold;
         }
 
         #playlists-container button {
@@ -44,6 +71,15 @@
     <hr>
     <section>
         <h2>Songs View</h2>
+        <div id="bulk-actions" class="bulk-actions">
+            <span id="selection-count">Selected songs: 0</span>
+            <button data-bulk-action="play">▶️ Play selected</button>
+            <button data-bulk-action="addToList">➕ Add selected to list</button>
+            <button data-bulk-action="removeFromList">🗑️ Remove selected from list</button>
+            <button data-bulk-action="addLabel">🏷️ Add label to selected</button>
+            <button data-bulk-action="removeLabel">🧹 Remove label from selected</button>
+            <button data-bulk-action="clearSelection">❌ Clear selection</button>
+        </div>
         <div id="songs-container"></div>
     </section>
     <hr>
