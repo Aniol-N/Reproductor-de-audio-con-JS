@@ -3,39 +3,58 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>JS Audio Player</title>
-    <script src="./main.js" type="module" defer></script>
+    <title>Music Player</title>
+    <script src="./playerPage.js" type="module" defer></script>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
         .song-item {
             border-bottom: 1px solid #ccc;
-            padding: 5px;
+            padding: 8px 4px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .song-checkbox {
-            cursor: pointer;
-            width: 18px;
-            height: 18px;
+        .song-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
         }
 
-        .bulk-actions {
-            margin: 10px 0;
-            padding: 10px;
+        .form-section {
             border: 1px solid #ccc;
+            padding: 12px;
+            margin: 12px 0;
+        }
+
+        .form-field {
+            margin-bottom: 10px;
+        }
+
+        .feedback {
+            font-size: 0.9rem;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .feedback.ok {
+            color: #0a7a0a;
+        }
+
+        .feedback.error {
+            color: #b00020;
+        }
+
+        .checkbox-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .bulk-actions button {
-            cursor: pointer;
-        }
-
-        #selection-count {
-            font-weight: bold;
+            gap: 10px;
+            margin-top: 5px;
         }
 
         #playlists-container button {
@@ -46,40 +65,74 @@
 </head>
 
 <body>
-    <h1>Audio Player</h1>
+    <h1>Music Player</h1>
+
     <section>
         <label>Filter music by labels:</label>
-        <select id="labelFilter" onchange="window.filterByLabel(this.value)">
+        <select id="labelFilter">
             <option value="all">All labels</option>
-            <option value="pop">Pop</option>
-            <option value="rock">Rock</option>
-            <option value="hiphop">Hip Hop</option>
-            <option value="electronic">Electronic</option>
-            <option value="latin">Latin</option>
-            <option value="jazz">Jazz</option>
-            <option value="classical">Classical</option>
-            <option value="reggae">Reggae</option>
-            <option value="rnb">R&B</option>
         </select>
     </section>
+
+    <section class="form-section">
+        <h2>Create New Music</h2>
+        <form id="music-form" novalidate>
+            <div class="form-field">
+                <label for="music-title">Title</label>
+                <input id="music-title" name="music-title" type="text" minlength="2" maxlength="20" required>
+                <small id="music-title-feedback" class="feedback"></small>
+            </div>
+
+            <div class="form-field">
+                <label for="music-file">File name</label>
+                <select id="music-file" name="music-file" required></select>
+                <small id="music-file-feedback" class="feedback"></small>
+            </div>
+
+            <div class="form-field">
+                <span>Labels</span>
+                <div id="music-labels" class="checkbox-group"></div>
+                <small id="music-labels-feedback" class="feedback"></small>
+            </div>
+
+            <button id="music-submit" type="submit" disabled>Add Music</button>
+        </form>
+    </section>
+
+    <section class="form-section">
+        <h2>Create New Music List</h2>
+        <form id="playlist-form" novalidate>
+            <div class="form-field">
+                <label for="playlist-title">Title</label>
+                <input id="playlist-title" name="playlist-title" type="text" minlength="2" maxlength="10" required>
+                <small id="playlist-title-feedback" class="feedback"></small>
+            </div>
+
+            <div class="form-field">
+                <span>Labels</span>
+                <div id="playlist-labels" class="checkbox-group"></div>
+                <small id="playlist-labels-feedback" class="feedback"></small>
+            </div>
+
+            <div class="form-field">
+                <label for="playlist-songs">Songs (select at least 2)</label>
+                <select id="playlist-songs" name="playlist-songs" multiple size="6"></select>
+                <small id="playlist-songs-feedback" class="feedback"></small>
+            </div>
+
+            <button id="playlist-submit" type="submit">Add Music List</button>
+            <small id="playlist-form-feedback" class="feedback"></small>
+        </form>
+    </section>
+
     <section>
         <h2>My Playlists</h2>
-        <button onclick="window.addNewList()">➕ Create New List</button>
-        <div id="playlists-container">
-        </div>
+        <div id="playlists-container"></div>
     </section>
+
     <hr>
     <section>
         <h2>Songs View</h2>
-        <div id="bulk-actions" class="bulk-actions">
-            <span id="selection-count">Selected songs: 0</span>
-            <button data-bulk-action="play">▶️ Play selected</button>
-            <button data-bulk-action="addToList">➕ Add selected to list</button>
-            <button data-bulk-action="removeFromList">🗑️ Remove selected from list</button>
-            <button data-bulk-action="addLabel">🏷️ Add label to selected</button>
-            <button data-bulk-action="removeLabel">🧹 Remove label from selected</button>
-            <button data-bulk-action="clearSelection">❌ Clear selection</button>
-        </div>
         <div id="songs-container"></div>
     </section>
     <hr>
@@ -87,13 +140,13 @@
         <h3 id="playback-display">No song selected</h3>
         <audio id="main-audio"></audio>
         <div class="controls">
-            <button onclick="window.controlAudio('play')">Play</button>
-            <button onclick="window.controlAudio('pause')">Pause</button>
-            <button onclick="window.controlAudio('stop')">Stop</button>
+            <button id="control-play" type="button">Play</button>
+            <button id="control-pause" type="button">Pause</button>
+            <button id="control-stop" type="button">Stop</button>
         </div>
         <div class="volume">
             <label>Volume:</label>
-            <input type="range" min="0" max="1" step="0.1" value="0.5" oninput="window.changeVolume(this.value)">
+            <input id="volume-slider" type="range" min="0" max="1" step="0.1" value="0.5">
         </div>
     </section>
 </body>

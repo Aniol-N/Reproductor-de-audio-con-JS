@@ -2,7 +2,7 @@ export class MusicList {
     constructor(title, labels = [], list = []) {
         this.title = title;
         this.labels = labels;
-        this.list = list; 
+        this.list = list;
     }
 
     set title(v) { this._title = v; }
